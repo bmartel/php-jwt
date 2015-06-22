@@ -36,8 +36,9 @@ $token = array(
  * https://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-40
  * for a list of spec-compliant algorithms.
  */
-$jwt = JWT::encode($token, $key);
-$decoded = JWT::decode($jwt, $key, array('HS256'));
+$jwtService = new \Bmartel\JWT\JWTService();
+$jwt = $jwtService->encode($token, $key);
+$decoded = $jwtService->decode($jwt, $key, array('HS256'));
 
 print_r($decoded);
 
@@ -49,20 +50,28 @@ print_r($decoded);
 $decoded_array = (array) $decoded;
 
 /**
- * You can add a leeway to account for when there is a clock skew times between
- * the signing and verifying servers. It is recommended that this leeway should
+ * You can add a buffer time to account for when there is a clock skew times between
+ * the signing and verifying servers. It is recommended that this buffer should
  * not be bigger than a few minutes.
  *
  * Source: http://self-issued.info/docs/draft-ietf-oauth-json-web-token.html#nbfDef
  */
-JWT::$leeway = 60; // $leeway in seconds
-$decoded = JWT::decode($jwt, $key, array('HS256'));
+$jwtService = new \Bmartel\JWT\JWTService();
+$decoded = $jwtService->allowBufferTime(60)->decode($jwt, $key, array('HS256'));
 
 ?>
 ```
 
 Changelog
 ---------
+
+#### 3.0.0 / 2015-06-21
+- Changed folder structure, added namespaces to all classes.
+- Removed classmapping, and used psr-4 namespacing for class autoloading.
+- Removed all static methods in JWT class in favor of instance methods.
+- Removed static var $leeway in favor of member var $bufferTime
+- Renamed JWT class to JWTService
+- Removed phpunit tests, added phpspec tests.
 
 #### 2.1.0 / 2015-05-20
 - Add support for adding a leeway to `JWT:decode()` that accounts for clock skew

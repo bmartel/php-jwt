@@ -1,0 +1,5 @@
+suites:
+   phpjwt_suite:
+      namespace: Bmartel\JWT
+      psr4_prefix: Bmartel\JWT
+      src_path: src
